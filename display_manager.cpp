@@ -1,32 +1,27 @@
-// display_manager.cpp
 #include "display_manager.h"
 
 TFT_eSPI tft = TFT_eSPI();
-TFT_eSprite player1Sprite = TFT_eSprite(&tft); // Karakterleri çizmek için kullanılacak
-TFT_eSprite player2Sprite = TFT_eSprite(&tft); // Karakterleri çizmek için kullanılacak
-TFT_eSprite bgSprite = TFT_eSprite(&tft);     // Arka planı temizlemek ve çizmek için
-TFT_eSprite uiSprite = TFT_eSprite(&tft);     // UI elementleri için
+TFT_eSprite player1Sprite = TFT_eSprite(&tft); 
+TFT_eSprite player2Sprite = TFT_eSprite(&tft);
+TFT_eSprite bgSprite = TFT_eSprite(&tft);    
+TFT_eSprite uiSprite = TFT_eSprite(&tft); 
 TFT_eSprite groundSprite = TFT_eSprite(&tft);
 
 void drawHealthPickUp() {
     if (healthPickUp.active) {
-        // Önceki pozisyonu temizle
         if (healthPickUp.prevX != 0 || healthPickUp.prevY != 0) { // İlk çizim değilse
-            tft.fillRect(healthPickUp.prevX - healthPickUp.prevSize / 2, // X pozisyonu merkezden, o yüzden yarısını çıkar
-                         healthPickUp.prevY - healthPickUp.prevSize / 2, // Y pozisyonu merkezden
+            tft.fillRect(healthPickUp.prevX - healthPickUp.prevSize / 2, 
+                         healthPickUp.prevY - healthPickUp.prevSize / 2, 
                          healthPickUp.prevSize, healthPickUp.prevSize, TFT_BLACK);
         }
         
-        // Noktayı çiz 
-        tft.fillCircle(healthPickUp.x, healthPickUp.y, healthPickUp.size / 2, healthPickUp.color); // Daire çizimi için
+        tft.fillCircle(healthPickUp.x, healthPickUp.y, healthPickUp.size / 2, healthPickUp.color); 
         
 
-        // Mevcut pozisyonu kaydet
         healthPickUp.prevX = healthPickUp.x;
         healthPickUp.prevY = healthPickUp.y;
         healthPickUp.prevSize = healthPickUp.size;
     } else {
-        // Eğer healthPickUp pasif hale geldiyse ve hala ekranda çizilmiş bir önceki konumu varsa, temizle
         if (healthPickUp.prevX != 0 || healthPickUp.prevY != 0 || healthPickUp.prevSize != 0) {
             tft.fillRect(healthPickUp.prevX - healthPickUp.prevSize / 2, 
                          healthPickUp.prevY - healthPickUp.prevSize / 2, 
@@ -37,12 +32,9 @@ void drawHealthPickUp() {
         }
     }
 }
-// Karakter çizimini ve eski pozisyon temizliğini yöneten fonksiyon
 void drawCharacterSprite(Player& p) {
-    // Hangi sprite'ın kullanılacağını belirle
     TFT_eSprite& currentSprite = (&p == &player1) ? player1Sprite : player2Sprite;
 
-    // Hangi sprite datasının ve boyutunun kullanılacağını belirle
     const uint16_t* currentSpriteData;
     int currentSpriteWidth;
     int currentSpriteHeight;
@@ -57,34 +49,24 @@ void drawCharacterSprite(Player& p) {
         currentSpriteHeight = KNIGHT_PANDA_HEIGHT;
     }
 
-    // Çizim pozisyonlarını hesapla (sprite'ın alt-orta noktası p.x, p.y'ye hizalanır)
     int drawX = round(p.x - (currentSpriteWidth / 2.0));
     int drawY = round(p.y - currentSpriteHeight);
 
-    // Eski alanı temizle (sadece pozisyon/boyut/sprite değiştiyse)
     if (p.prevX != 0 || p.prevY != 0 || p.prevWidth != 0 || p.prevHeight != 0) { // İlk çizim değilse
         if (drawX != p.prevX || drawY != p.prevY ||
             currentSpriteWidth != p.prevWidth || currentSpriteHeight != p.prevHeight ||
             currentSpriteData != p.prevSprite) { // Sprite değiştiyse de eski alanı temizle
-            
-            // Eski karakterin kapladığı alanı siyaha boyayarak temizle
-            // Zemin çizgisinin üzerine basmamaya dikkat etmeliyiz.
-            // Bu kısım biraz daha gelişmiş bir temizleme mantığı gerektirebilir
-            // Ancak şimdilik bu şekilde tutalım ve sonraki adımda zemini de içeren temizleme düşünelim.
+         
             tft.fillRect(p.prevX, p.prevY, p.prevWidth, p.prevHeight, TFT_BLACK); 
         }
     }
 
-    // Sprite'ın içindeki tamponu şeffaf renkle doldur (genellikle siyah)
     currentSprite.fillSprite(TRANSPARENT_COLOR);
     
-    // RGB565 sprite verilerini sprite tamponuna kopyala.
     currentSprite.pushImage(0, 0, currentSpriteWidth, currentSpriteHeight, (uint16_t*)currentSpriteData);
 
-    // Oluşturulan sprite'ı ana ekrana basarken ŞEFFAF RENK PARAMETRESİNİ VER.
     currentSprite.pushSprite(drawX, drawY, TRANSPARENT_COLOR);
 
-    // Mevcut pozisyon, boyut ve kullanılan sprite'ı kaydet
     p.prevX = drawX;
     p.prevY = drawY;
     p.prevWidth = currentSpriteWidth;
@@ -94,7 +76,6 @@ void drawCharacterSprite(Player& p) {
 
 
 void initSprites() {
-    // Karakter sprite'larını 16-bit renk derinliğinde oluştur
     int maxSpriteWidth = max(KNIGHT_PANDA_WIDTH, KNIGHT_ATTACK_WIDTH);
     int maxSpriteHeight = max(KNIGHT_PANDA_HEIGHT, KNIGHT_ATTACK_HEIGHT);
 
@@ -106,7 +87,6 @@ void initSprites() {
     player2Sprite.createSprite(maxSpriteWidth, maxSpriteHeight);
     player2Sprite.setSwapBytes(true); 
 
-    // Arka plan sprite'ını ekranın TAM boyutunda oluştur
     bgSprite.setColorDepth(16); 
     bgSprite.createSprite(SCREEN_WIDTH, SCREEN_HEIGHT); 
     bgSprite.setSwapBytes(true);
@@ -115,12 +95,10 @@ void initSprites() {
     uiSprite.createSprite(SCREEN_WIDTH, 20); 
     uiSprite.setSwapBytes(true);
 
-  // Zemin sprite'ını oluştur
     groundSprite.setColorDepth(16);
     groundSprite.createSprite(GROUND_SPRITE_WIDTH, GROUND_SPRITE_HEIGHT);
     groundSprite.setSwapBytes(true);
 
-    // Zemin sprite verilerini yükle (sadece bir kez setup'ta)
     groundSprite.pushImage(0, 0, GROUND_SPRITE_WIDTH, GROUND_SPRITE_HEIGHT, (uint16_t*)ground_sprite_data);
 }
 
@@ -170,7 +148,6 @@ void updateHealthBars() {
     uiSprite.setCursor(300, 13);
     uiSprite.print("P2");
     
-    // Sağlık çubuklarını çiz
     int p1BarWidth = map(player1.health, 0, 100, 0, 100);
     int p2BarWidth = map(player2.health, 0, 100, 0, 100);
     
@@ -209,23 +186,15 @@ void drawSlashEffect(int x, int y, bool facingRight, int power) {
 
 void drawGame() {
   
-    // Zemin çizgisini çiz
 
       groundSprite.pushSprite(0, 180);
 
-    // Karakterleri çiz
     drawCharacterSprite(player1);
     drawCharacterSprite(player2);
 
-    // Slash efektini çiz (slashEffect'in aktifliği game_logic.cpp'de yönetiliyor)
     if (slashEffect.active) {
         drawSlashEffect(slashEffect.x, slashEffect.y, slashEffect.facingRight, slashEffect.power);
     }
-     // Can veren noktayı çiz
     drawHealthPickUp();
-
-    // Sağlık çubuklarını çiz
-    
-    // Sağlık çubuklarını çiz
     updateHealthBars();
 }
