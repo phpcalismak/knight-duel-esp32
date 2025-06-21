@@ -14,28 +14,25 @@ struct VisualEffect {
   unsigned long duration;
 };
 
-// Utility function for calculating distance (Euclidean distance)
 float dist(float x1, float y1, float x2, float y2); // <<< ADD THIS LINE
 
-// Can veren nokta için struct
+
 struct HealthPickUp {
-    bool active; // Noktanın aktif olup olmadığını belirtir
-    float x, y;  // Noktanın konumu
-    int size;    // Noktanın boyutu (piksel)
-    uint16_t color; // Noktanın rengi (kırmızı olacak)
+    bool active; 
+    float x, y;  
+    int size;    
+    uint16_t color; 
     
-    // Temizleme için önceki konum bilgisi
+    
     float prevX, prevY;
     int prevSize;
 };
 
-// External declarations for game logic variables
+
 extern VisualEffect slashEffect;
 
-// Global olarak bir can veren nokta nesnesi tanımlayalım
 extern HealthPickUp healthPickUp;
 
-// --- ENSURE THESE ARE DECLARED AS EXTERN HERE ---
 extern GameState currentState;
 extern int winnerPlayer;
 extern unsigned long stateChangeTime;
