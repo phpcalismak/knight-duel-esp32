@@ -27,7 +27,7 @@ void drawHealthPickUp() {
             tft.fillRect(healthPickUp.prevX - healthPickUp.prevSize / 2, 
                          healthPickUp.prevY - healthPickUp.prevSize / 2, 
                          healthPickUp.prevSize, healthPickUp.prevSize, TFT_BLACK);
-            healthPickUp.prevX = 0; // Temizlendiğini işaretle
+            healthPickUp.prevX = 0; 
             healthPickUp.prevY = 0;
             healthPickUp.prevSize = 0;
         }
@@ -56,7 +56,7 @@ void drawCharacterSprite(Player& p) {
     if (p.prevX != 0 || p.prevY != 0 || p.prevWidth != 0 || p.prevHeight != 0) { // İlk çizim değilse
         if (drawX != p.prevX || drawY != p.prevY ||
             currentSpriteWidth != p.prevWidth || currentSpriteHeight != p.prevHeight ||
-            currentSpriteData != p.prevSprite) { // Sprite değiştiyse de eski alanı temizle
+            currentSpriteData != p.prevSprite) { 
          
             tft.fillRect(p.prevX, p.prevY, p.prevWidth, p.prevHeight, TFT_BLACK); 
         }
@@ -80,11 +80,11 @@ void initSprites() {
     int maxSpriteWidth = max(KNIGHT_PANDA_WIDTH, KNIGHT_ATTACK_WIDTH);
     int maxSpriteHeight = max(KNIGHT_PANDA_HEIGHT, KNIGHT_ATTACK_HEIGHT);
 
-    player1Sprite.setColorDepth(16); // RGB565 için 16-bit
+    player1Sprite.setColorDepth(16); 
     player1Sprite.createSprite(maxSpriteWidth, maxSpriteHeight);
     player1Sprite.setSwapBytes(true); 
 
-    player2Sprite.setColorDepth(16); // RGB565 için 16-bit
+    player2Sprite.setColorDepth(16); 
     player2Sprite.createSprite(maxSpriteWidth, maxSpriteHeight);
     player2Sprite.setSwapBytes(true); 
 
@@ -104,7 +104,7 @@ void initSprites() {
 }
 
 void drawTitleScreen() {
-    tft.fillScreen(TFT_BLACK); // Başlık ekranına geçerken tüm ekranı temizle
+    tft.fillScreen(TFT_BLACK); 
     tft.setTextColor(TFT_WHITE);
     tft.setTextSize(3);
     tft.setCursor(30, 40);
@@ -124,7 +124,7 @@ void drawTitleScreen() {
 }
 
 void drawGameOverScreen(int winner) {
-    tft.fillScreen(TFT_BLACK); // Game Over ekranına geçerken tüm ekranı temizle
+    tft.fillScreen(TFT_BLACK); 
     tft.setTextSize(3);
     tft.setCursor(50, 100);
     if (winner == 1) {
@@ -141,7 +141,7 @@ void drawGameOverScreen(int winner) {
 }
 
 void updateHealthBars() {
-    uiSprite.fillSprite(TFT_BLACK); // UI sprite'ını her seferinde temizle
+    uiSprite.fillSprite(TFT_BLACK); 
     uiSprite.setTextColor(TFT_BLUE);
     uiSprite.setCursor(10, 13);
     uiSprite.print("P1");
@@ -152,14 +152,13 @@ void updateHealthBars() {
     int p1BarWidth = map(player1.health, 0, 100, 0, 100);
     int p2BarWidth = map(player2.health, 0, 100, 0, 100);
     
-    uiSprite.drawRect(30, 4, 100, 6, TFT_WHITE); // P1 sağlık barı çerçevesi
-    uiSprite.fillRect(30, 4, p1BarWidth, 6, TFT_BLUE); // P1 sağlık barı içi
+    uiSprite.drawRect(30, 4, 100, 6, TFT_WHITE); 
+    uiSprite.fillRect(30, 4, p1BarWidth, 6, TFT_BLUE);
     
-    uiSprite.drawRect(190, 4, 100, 6, TFT_WHITE); // P2 sağlık barı çerçevesi
-    uiSprite.fillRect(290 - p2BarWidth, 4, p2BarWidth, 6, TFT_RED); // P2 sağlık barı içi (sağdan sola dolacak)
+    uiSprite.drawRect(190, 4, 100, 6, TFT_WHITE); 
+    uiSprite.fillRect(290 - p2BarWidth, 4, p2BarWidth, 6, TFT_RED); 
     
-    uiSprite.pushSprite(0, 0); // UI sprite'ını ekrana bas
-}
+    uiSprite.pushSprite(0, 0); 
 
 void drawSlashEffect(int x, int y, bool facingRight, int power) {
     if (!slashEffect.active) return;
