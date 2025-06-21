@@ -46,7 +46,6 @@ extern int crouchingHitbox[];
 void resetGame();
 void updateVisualEffects();
 void handleAttack(Player &attacker, Player &defender);
-// Yeni fonksiyon bildirimleri
 void spawnHealthPickUp();
 void updateHealthPickUp();
 void drawHealthPickUp();
