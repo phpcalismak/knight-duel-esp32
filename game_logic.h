@@ -36,8 +36,8 @@ extern HealthPickUp healthPickUp;
 extern GameState currentState;
 extern int winnerPlayer;
 extern unsigned long stateChangeTime;
-extern unsigned long lastFrameTime; // ADDED IF NOT ALREADY THERE
-extern unsigned long debugUpdateTime; // ADDED IF NOT ALREADY THERE
+extern unsigned long lastFrameTime; 
+extern unsigned long debugUpdateTime; 
 // -------------------------------------------------
 
 extern int standingHitbox[];
