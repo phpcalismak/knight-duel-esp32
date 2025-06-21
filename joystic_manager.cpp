@@ -46,7 +46,6 @@ void printDebugInfo() {
   Serial.print(" | Joystick2 raw: "); Serial.print(analogRead(JOY2_X_PIN)); Serial.print(","); Serial.println(analogRead(JOY2_Y_PIN));
 }
 
-// Function to check if attack button is pressed
 bool isAttackPressed(int btnPin) { // <-- ADD THIS FUNCTION
   return digitalRead(btnPin) == LOW;
 }
