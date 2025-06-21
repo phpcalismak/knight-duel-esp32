@@ -1,7 +1,7 @@
 #include "joystick_manager.h"
-#include "player.h" // For player health, position data
+#include "player.h"
 
-// Define joystick center values (global)
+
 int joy1XCenter = 2048;
 int joy1YCenter = 2048;
 int joy2XCenter = 2048;
