@@ -1,35 +1,32 @@
 #include "game_logic.h"
 #include "audio_manager.h"
-#include "display_manager.h" // For drawBackground()
-#include "game_config.h" // Needed for constant values like GROUND_LEVEL, etc.
+#include "display_manager.h" 
+#include "game_config.h" 
 
-// Define game logic variables
 VisualEffect slashEffect = {false, 0, 0, true, 1, 0, 200};
 
-GameState currentState = TITLE_SCREEN; // Initialize
-int winnerPlayer = 0; // Initialize
-unsigned long stateChangeTime = 0; // Initialize
-unsigned long lastFrameTime = 0; // Initialize
-unsigned long debugUpdateTime = 0; // Initialize
+GameState currentState = TITLE_SCREEN; 
+int winnerPlayer = 0; 
+unsigned long stateChangeTime = 0; 
+unsigned long lastFrameTime = 0; 
+unsigned long debugUpdateTime = 0; 
 // ----------------------------------------------------------
-HealthPickUp healthPickUp = {false, 0, 0, 0, TFT_GREEN, 0, 0, 0}; // Başlangıçta pasif
+HealthPickUp healthPickUp = {false, 0, 0, 0, TFT_GREEN, 0, 0, 0}; 
 
 // Hitbox [x, y, width, height] - relative to player's (x,y)
 int standingHitbox[] = {-10, 2, 20, 30};
 int crouchingHitbox[] = {-10, 12, 20, 20};
 
-// Implementation of the distance function
 float dist(float x1, float y1, float x2, float y2) {
   return sqrt(sq(x2 - x1) + sq(y2 - y1));
 }
 
-// Rastgele bir konumda can veren nokta oluşturur
 void spawnHealthPickUp() {
-    if (!healthPickUp.active) { // Sadece aktif bir nokta yoksa yenisini oluştur
+    if (!healthPickUp.active) { 
         healthPickUp.active = true;
-        healthPickUp.x = random(10, SCREEN_WIDTH - 10); // Ekran genişliği içinde rastgele X
-        healthPickUp.y = 0; // Ekranın en üstünden başla
-        healthPickUp.size = 5; // Noktanın boyutu (5x5 piksel kare)
+        healthPickUp.x = random(10, SCREEN_WIDTH - 10); 
+        healthPickUp.y = 0; 
+        healthPickUp.size = 5; 
         healthPickUp.color = TFT_RED;
         
         // Önceki konum bilgilerini sıfırla
@@ -39,31 +36,26 @@ void spawnHealthPickUp() {
     }
 }
 
-// Can veren noktanın konumunu günceller ve çarpışmayı kontrol eder
 void updateHealthPickUp() {
     if (healthPickUp.active) {
-        // Noktayı aşağı doğru hareket ettir
-        healthPickUp.y += HEALTH_PICKUP_FALL_SPEED; // game_config.h'de tanımlanacak
+        healthPickUp.y += HEALTH_PICKUP_FALL_SPEED; 
 
-        // Eğer zemin seviyesine ulaşırsa veya ekranın dışına çıkarsa pasif hale getir
-        if (healthPickUp.y >= GROUND_LEVEL + healthPickUp.size) { // Yere ulaştığında veya altından geçtiğinde
+        if (healthPickUp.y >= GROUND_LEVEL + healthPickUp.size) { 
             healthPickUp.active = false;
         }
 
-        // Oyuncularla çarpışma kontrolü
-        // Player 1 ile çarpışma
+       
         float player1CenterX = player1.x;
-        float player1CenterY = player1.y - (KNIGHT_PANDA_HEIGHT / 2.0); // Ortası değil, zeminden yukarısı
+        float player1CenterY = player1.y - (KNIGHT_PANDA_HEIGHT / 2.0); 
 
-        if (dist(healthPickUp.x, healthPickUp.y, player1CenterX, player1CenterY) < (healthPickUp.size / 2.0) + (KNIGHT_PANDA_HEIGHT / 2.0)) { // Basit mesafe kontrolü
+        if (dist(healthPickUp.x, healthPickUp.y, player1CenterX, player1CenterY) < (healthPickUp.size / 2.0) + (KNIGHT_PANDA_HEIGHT / 2.0)) { 
             if (healthPickUp.active) {
-                player1.health = min(100, player1.health + HEALTH_PICKUP_AMOUNT); // Canı artır, 100'ü geçmesin
-                healthPickUp.active = false; // Noktayı pasif hale getir
-                playSound(1); // Örneğin bir "toplama" sesi
+                player1.health = min(100, player1.health + HEALTH_PICKUP_AMOUNT); 
+                healthPickUp.active = false; 
+                playSound(1); 
             }
         }
         
-        // Player 2 ile çarpışma (aynı mantık)
         float player2CenterX = player2.x;
         float player2CenterY = player2.y - (KNIGHT_PANDA_HEIGHT / 2.0);
 
@@ -79,11 +71,9 @@ void updateHealthPickUp() {
 
 
 void resetGame() {
-  // Use GROUND_LEVEL from game_config.h
   player1 = {100, GROUND_LEVEL, 0, 0, true, false, false, false, 100, 0, 0, 0, false, 0, 1};
   player2 = {220, GROUND_LEVEL, 0, 0, false, false, false, false, 100, 0, 0, 0, false, 0, 1};
   slashEffect.active = false;
-   // HealthPickUp'ı da sıfırla
     healthPickUp.active = false;
     healthPickUp.x = 0;
     healthPickUp.y = 0;
