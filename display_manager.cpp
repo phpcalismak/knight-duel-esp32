@@ -9,11 +9,12 @@ TFT_eSprite groundSprite = TFT_eSprite(&tft);
 
 void drawHealthPickUp() {
     if (healthPickUp.active) {
-        if (healthPickUp.prevX != 0 || healthPickUp.prevY != 0) { // İlk çizim değilse
+        if (healthPickUp.prevX != 0 || healthPickUp.prevY != 0) {
             tft.fillRect(healthPickUp.prevX - healthPickUp.prevSize / 2, 
                          healthPickUp.prevY - healthPickUp.prevSize / 2, 
                          healthPickUp.prevSize, healthPickUp.prevSize, TFT_BLACK);
         }
+    }
         
         tft.fillCircle(healthPickUp.x, healthPickUp.y, healthPickUp.size / 2, healthPickUp.color); 
         
