@@ -2,7 +2,7 @@
 #define AUDIO_MANAGER_H
 
 #include <Arduino.h>
-#include "game_config.h" // For BUZZER_PIN
+#include "game_config.h"
 
 void playSound(int soundType);
 
