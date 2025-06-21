@@ -1,4 +1,3 @@
-// User_Setup.h - ESP32 + ILI9341 + Hardware SPI
 
 #define ILI9341_DRIVER       // Ekran sürücüsü
 
